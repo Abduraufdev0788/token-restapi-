@@ -3,7 +3,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
 
-from .serializers import RegisterSerializers
+from .serializers import RegisterSerializers, UserSerializers
 
 
 class Register(APIView):
@@ -11,6 +11,10 @@ class Register(APIView):
         serializer = RegisterSerializers(data=request.data)
 
         if serializer.is_valid(raise_exception=True):
-            return Response(serializer.validated_data)
+            user = serializer.save()
+
+            user_json = UserSerializers(user).data
+
+            return Response(user_json, status=status.HTTP_201_CREATED)
         
         return Response(status=status.HTTP_400_BAD_REQUEST)
