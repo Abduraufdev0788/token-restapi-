@@ -7,7 +7,7 @@ User = get_user_model()
 class UserSerializers(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = "__all__"
+        exclude = ["password", "role", "groups", "user_permissions"]
 
 class RegisterSerializers(serializers.ModelSerializer):
 
@@ -41,11 +41,25 @@ class LoginSerializers(serializers.Serializer):
 class ProfileUpdate(serializers.ModelSerializer):
     class Meta:
         model = User
-        exclude = ["password"]
+        exclude = ["password", "role", "groups", "user_permissions"]
         extra_kwargs = {
             "username": {
                 "required": False
             }
         }
+
+
+class PasswordChangeSerializer(serializers.Serializer):
+    password = serializers.CharField(max_length=128)
+    new_password = serializers.CharField(max_length=128)
+    confirm = serializers.CharField(max_length=128)
+    
+    def validate(self, attrs):
+        if attrs['new_password'] != attrs['confirm']:
+            raise serializers.ValidationError('password and confirm are nor the same value.')
+        
+        return super().validate(attrs)
+
+
   
         
