@@ -7,7 +7,7 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
 
-from .serializers import RegisterSerializers, UserSerializers, LoginSerializers
+from .serializers import RegisterSerializers, UserSerializers, LoginSerializers, ProfileUpdate
 
 
 class Register(APIView):
@@ -58,6 +58,18 @@ class Profile(APIView):
         user = request.user
 
         serializer = UserSerializers(user)
+
+        return Response(serializer.data)
+    
+    def put(self, request:Request)->Response:
+        user = request.user
+
+        serializer = ProfileUpdate(data = request.data, partial = True)
+
+        if serializer.is_valid(raise_exception=True):
+            updated_user = serializer.update(user, serializer.validated_data)
+
+        serializer = UserSerializers(updated_user)
 
         return Response(serializer.data)
 
