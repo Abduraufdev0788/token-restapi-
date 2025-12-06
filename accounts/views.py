@@ -49,6 +49,17 @@ class Logout(APIView):
         request.user.auth_token.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+class Profile(APIView):
+    authentication_classes = [TokenAuthentication]
+
+    def get(self, request: Request)->Response:
+        user = request.user
+
+        serializer = UserSerializers(user)
+
+        return Response(serializer.data)
 
         
 
