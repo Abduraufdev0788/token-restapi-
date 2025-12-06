@@ -10,6 +10,8 @@ from rest_framework.authentication import TokenAuthentication
 
 from .serializers import RegisterSerializers, UserSerializers, LoginSerializers, ProfileUpdate, PasswordChangeSerializer
 
+from .permissions import Is_Admin, Is_Managment,Is_User
+
 
 class Register(APIView):
     def post(self, request:Request)->Response:
@@ -93,6 +95,32 @@ class PasswordChangeView(APIView):
 
             serializer = UserSerializers(user)
             return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
+        
+
+class AdminPanelView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [Is_Admin]
+
+    def get(self, request:Response)-> Response:
+        return Response("xush kelibsiz admin panelga ")
+    
+
+class ManagmentView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [Is_Managment or Is_Admin]
+
+    def get(self, request: Request ) ->Response:
+
+        return Response("xush kelibsiz Managment")
+    
+class UserView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [Is_User]
+
+    def get(self, request: Request)-> Response:
+        return Response("Siz User panelga xush kelibsiz")
+
+
             
             
             
