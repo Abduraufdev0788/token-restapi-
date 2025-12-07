@@ -63,12 +63,7 @@ class PasswordChangeSerializer(serializers.Serializer):
 
 class AdminDashboardserializer(serializers.Serializer):
     total_users = serializers.SerializerMethodField()
-    users = serializers.SerializerMethodField()
-
-    class Meta:
-        model = User
-        fields = "__all__"
-       
+    users = serializers.SerializerMethodField() 
 
     def get_total_users(self,obj):
         return User.objects.count()
