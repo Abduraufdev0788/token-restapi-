@@ -59,6 +59,25 @@ class PasswordChangeSerializer(serializers.Serializer):
             raise serializers.ValidationError('password and confirm are nor the same value.')
         
         return super().validate(attrs)
+    
+
+class AdminDashboardserializer(serializers.Serializer):
+    total_users = serializers.SerializerMethodField()
+    users = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = "__all__"
+       
+
+    def get_total_users(self,obj):
+        return User.objects.count()
+    
+    def get_users(self, obj):
+        return User.objects.all().values(
+            'id', 'username', 'email', 'first_name', 'last_name', 'is_active', 'date_joined', "password", "role", "groups", "user_permissions"
+        ).order_by('-date_joined')
+    
 
 
   

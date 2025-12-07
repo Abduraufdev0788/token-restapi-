@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
 
-from .serializers import RegisterSerializers, UserSerializers, LoginSerializers, ProfileUpdate, PasswordChangeSerializer
+from .serializers import RegisterSerializers, UserSerializers, LoginSerializers, ProfileUpdate, PasswordChangeSerializer, AdminDashboardserializer
 
 from .permissions import Is_Admin, Is_Managment,Is_User
 
@@ -102,7 +102,9 @@ class AdminPanelView(APIView):
     permission_classes = [Is_Admin]
 
     def get(self, request:Response)-> Response:
-        return Response("xush kelibsiz admin panelga ")
+        serializers = AdminDashboardserializer({})
+
+        return Response(serializers.data)
     
 
 class ManagmentView(APIView):
@@ -119,6 +121,7 @@ class UserView(APIView):
 
     def get(self, request: Request)-> Response:
         return Response("Siz User panelga xush kelibsiz")
+
 
 
             
